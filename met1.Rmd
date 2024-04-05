@@ -18,6 +18,7 @@ A Prova Brasil é uma avaliação diagnóstica realizado pelo Instituto Nacional
 Segue a seguir uma tabela de todas variáveis encontradas na amostra fornecida para o aluno com matrícula 232014905 junto com descrições de cada uma e o tipo delas, além da escala.
 
 ```{r, echo=FALSE, error=FALSE, message=FALSE, fig.align='center', fig.pos='H'}
+library(purrr)
 library(kableExtra)
 
 val_metodologia <- data.frame(
@@ -185,14 +186,16 @@ kable(dados_tabela,"latex", caption = "qtd de alunos", linesep = "\\addlinespace
 
 qtd_classes <- round(1 + 3.3 * log(length(banco)))
 
-labels = c("a", "b","c", "d", "e", "f", "g", "h", "i", "j", "k")
 
-dist_freq <- table(cut(banco$NOTA_LP, breaks = qtd_classes, include.lowest = T))
-rownames(dist_freq) <- labels
+dist_freq <- table(cut(banco$NOTA_LP, breaks = qtd_classes))
+labels <- as.vector(names(dist_freq))
+
+rownames(dist_freq) <- map_chr(labels, ~gsub("\\((\\d+),(\\d+)\\]", "\\1 |------ \\2", .x))
+
 
 kable(dist_freq,"latex", caption = "nota dos alunos") %>%
   kable_styling(latex_options = c("hold_position"), full_width = FALSE) %>%
-  column_spec(1, bold = TRUE) %>%
+  column_spec(1) %>%
   row_spec(0, bold = TRUE) %>%
   kable_styling(latex_options = c("scale_down"))
 ```
