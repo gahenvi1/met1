@@ -1,0 +1,180 @@
+---
+title: " " 
+output:
+  pdf_document: default
+  html_document: default
+header-includes:
+   - \usepackage{caption, graphicx, subfig, epstopdf, enumitem, floatrow}
+   - \captionsetup[table]{labelfont={bf}, labelformat=default, labelsep = colon, name = {Tabela}}
+   - \captionsetup[figure]{labelfont={bf}, labelformat=default, labelsep = colon, name = {Gráfico}}
+---
+
+# A coleta de dados
+
+A Prova Brasil é uma avaliação diagnóstica realizado pelo Instituto Nacional de Estudos e Pesquisas Educacionais Anísio Teixeira (Inep/MEC) com o intuito de avaliar os alunos de ensino básico do quinto ano e do nono ano do Ensino Fundamental. É também um exame para avaliar o quão bom é o sistema educacional no Brasil. A prova é realizada em escolas públicas e particulares. Podemos declarar que a população alvo são esses próprios alunos de quinto e nono ano. Entretando não temos o mesmo grupo como população acessível, visto que apenas escolas mais de 20 alunos matriculados nesses anos são avaliadas, perdendo assim uma parte da sua população alvo. As principais características levantadas incluem o nome, idade, nota das provas(Portugues e Matemática) como também escolaridade do pai e da mãe, sexo, entre outras variáveis. A maneira que eles coletam esses dados é justamente através da prova e através de questionário feito pelos alunos.
+
+# Amostra do aluno 232014905
+
+Segue a seguir uma tabela de todas variáveis encontradas na amostra fornecida para o aluno com matrícula 232014905 junto com descrições de cada uma e o tipo delas, além da escala.
+
+```{r, echo=FALSE, error=FALSE, message=FALSE, fig.align='center', fig.pos='H'}
+library(kableExtra)
+
+val_metodologia <- data.frame(
+  `Variável` = c(
+    "Ano",
+    "Região",
+    "Unidade Fedarativa",
+    "Município",
+    "Área",
+    "Dependência administrativa",
+    "Localização",
+    "Nota em LP",
+    "Nota em MAT",
+    "Sexo",
+    "Raça",
+    "Mês de Nasc.",
+    "Ano de Nasc.",
+    "Computador",
+    "Esc. Mãe",
+    "Esc. Pai",
+    "Tempo de tela",
+    "Afazeres dom.",
+    "Trabalho",
+    "Perspectivas"
+  ),
+  `Tipo de variável` = c(
+    "Quantitativa discreta.",
+    "Qualitativa nominal.",
+    "Qualitativa nominal.",
+    "Qualitativa nominal.",
+    "Qualitativa nominal.",
+    "Qualitativa nominal.",
+    "Qualitativa nominal.",
+    "Quantitativa contínua.",
+    "Quantitativa contínua.",
+    "Qualitativa nominal.",
+    "Qualitativa nominal.",
+    "Qualitativa nominal.",
+    "Quantitativa discreta.",
+    "Qualitativa ordinal.",
+    "Qualitativa ordinal.",
+    "Qualitativa ordinal.",
+    "Qualitativa ordinal.",
+    "Qualitativa ordinal.",
+    "Qualitativa nominal",
+    "Qualitativa nominal"
+  ),
+    Escala = c(
+    "Nominal.",
+    "Nominal.",
+    "Nominal.",
+    "Nominal.",
+    "Nominal.",
+    "Nominal.",
+    "Nominal.",
+    "Intervalar.",
+    "Intervalar.",
+    "Nominal.",
+    "Nominal.",
+    "Nominal.",
+    "Nominal.",
+    "Razão.",
+    "Ordinal.",
+    "Ordinal.",
+    "Ordinal.",
+    "Ordinal.",
+    "Nominal.",
+    "Nominal."
+  ),
+  `Descrição da variável` = c(
+    "Ano de realização da SAEB.",
+    "Região onde é localizada a escola.",
+    "UF da localização da escola.",
+    "Município onde é localizada a escola.",
+    "Área de localização do estudante.",
+    "Âmbito de subordinação da escola.",
+    "Localização da escola",
+    "Nota na prova de língua portuguesa.",
+    "Nota na prova de matemática.",
+    "Sexo do estudante.",
+    "Raça do estudante.",
+    "Mês de nascimento.",
+    "Ano de nascimento.",
+    "Se o aluno tem computador em casa.",
+    "Escolaridade da mãe.",
+    "Escolaridade do pai.",
+    "Quanto tempo o estudante gasta em telas eletrônicas.",
+    "Tempo gasto fazendo afazeres domésticos.",
+    "Se o aluno trabalha ou não.",
+    "Perspectivas do futuro."
+  )
+  )
+
+
+kable(val_metodologia,"latex", caption = "Explicação das Variáveis", linesep = "\\addlinespace") %>%
+  kable_styling(latex_options = c("hold_position"), full_width = FALSE) %>%
+  column_spec(1, bold = TRUE) %>%
+  row_spec(0, bold = TRUE) %>%
+  kable_styling(latex_options = c("scale_down"))
+
+
+```
+
+# Análise das variáveis categóricas
+
+As variáveis selecionadas foram: sexo(1) e raça(2) do estudante, região(3) onde é localizada a escola, se tem ou não computadores(4) e
+
+```{r fig-sub, echo=FALSE, error=FALSE, message=FALSE, fig.cap='Mapa', out.width='.99\\linewidth' ,fig.height=3}
+library(dplyr)
+library(geobr)
+library(ggplot2)
+library(viridis)
+library(gridExtra)
+
+banco <- read.csv("amostra_232014905.csv")
+brasil <- read_country(year = 2020)
+
+#mapa
+names(brasil)[which(names(brasil) == "abbrev_state")] <- "UF"
+dados_mapa <- banco %>% 
+  group_by(UF) %>% 
+  count() 
+
+dados_mapa <- brasil %>%
+  left_join(dados_mapa)
+
+
+options(scipen = 999)
+
+ggplot() + 
+  geom_sf(data=dados_mapa,  aes(fill=n),color = NA)+
+  scale_fill_viridis(option = "D", direction = -1, name = "Número de estudantes") +
+  theme_minimal()
+
+
+#tabela
+dados_tabela <- banco %>%
+  group_by(UF) %>%
+  summarize(n = n(), fi = n()/nrow(banco)) %>%
+  arrange(desc(n))
+
+dados_tabela$UF <- factor(dados_tabela$UF) 
+levels(dados_tabela$UF)<- c("Acre", "Alagoas", "Amazônas", "Amapá", "Bahia", "Ceará", "Distrito Federal", "Espírito Santo", 
+             "Goiás", "Maranhão", "Minas Gerais", "Mato Grosso Do Sul", "Mato Grosso", "Pará", "Paraíba", "Pernambuco", 
+             "Piauí", "Paraná", "Rio De Janeiro", "Rio Grande Do Norte", "Rondônia", "Roraima", "Rio Grande Do Sul", 
+             "Santa Catarina", "Sergipe", "São Paulo", "Tocantins")
+  
+
+colnames(dados_tabela) <- c("Unidade Federativa", "Frequência absoluta", "Frequência relativa")
+    
+kable(dados_tabela,"latex", caption = "qtd de alunos", linesep = "\\addlinespace") %>%
+  kable_styling(latex_options = c("hold_position"), full_width = FALSE) %>%
+  column_spec(1, bold = TRUE) %>%
+  row_spec(0, bold = TRUE) %>%
+  kable_styling(latex_options = c("scale_down"))
+
+
+```
+
+
