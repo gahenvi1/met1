@@ -198,6 +198,7 @@ kable(dist_freq,"latex", caption = "nota dos alunos") %>%
   column_spec(1) %>%
   row_spec(0, bold = TRUE) %>%
   kable_styling(latex_options = c("scale_down"))
+
 ```
  
 

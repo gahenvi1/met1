@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.3.31)  5 APR 2024 12:30
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.3.31)  5 APR 2024 12:37
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -611,49 +611,49 @@ Package caption Info: wrapfig package is loaded.
 Package caption Info: End \AtBeginDocument code.
 (/Users/gahenvihaliu/Library/TinyTeX/texmf-dist/tex/latex/floatrow/fr-subfig.sty
 Package: fr-subfig 2007/12/24 v0.1g (beta) floatrow: additions for subfig
-\FBsc@max=\skip87
-\FBso@max=\skip88
+\FBsc@max=\skip86
+\FBso@max=\skip87
 ) (/Users/gahenvihaliu/Library/TinyTeX/texmf-dist/tex/latex/floatrow/fr-longtable.sty
 Package: fr-longtable 2007/11/28 v0.1b (beta) floatrow: additions for longtable
-\flrow@LT@lasthead=\box76
-\flrow@LT@prelastfoot=\box77
-\c@FBLTpage=\count333
+\flrow@LT@lasthead=\box75
+\flrow@LT@prelastfoot=\box76
+\c@FBLTpage=\count330
 )
-Package hyperref Info: Link coloring OFF on input line 127.
-LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 203.
+Package hyperref Info: Link coloring OFF on input line 87.
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 163.
 (/Users/gahenvihaliu/Library/TinyTeX/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 203.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 163.
 (/Users/gahenvihaliu/Library/TinyTeX/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 203.
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 163.
 (/Users/gahenvihaliu/Library/TinyTeX/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 203.
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 163.
 (/Users/gahenvihaliu/Library/TinyTeX/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 203.
+(Font)              <10> on input line 163.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 203.
+(Font)              <7> on input line 163.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 203.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 203.
+(Font)              <5> on input line 163.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 163.
 (/Users/gahenvihaliu/Library/TinyTeX/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 203.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 163.
 (/Users/gahenvihaliu/Library/TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 <met1_files/figure-latex/fig-sub-1.pdf, id=4, 469.755pt x 216.81pt>
 File: met1_files/figure-latex/fig-sub-1.pdf Graphic file (type pdf)
 <use met1_files/figure-latex/fig-sub-1.pdf>
-Package pdftex.def Info: met1_files/figure-latex/fig-sub-1.pdf  used on input line 214.
+Package pdftex.def Info: met1_files/figure-latex/fig-sub-1.pdf  used on input line 174.
 (pdftex.def)             Requested size: 465.0589pt x 214.64255pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
@@ -661,12 +661,6 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 [1
 
 {/Users/gahenvihaliu/Library/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/Users/gahenvihaliu/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}]
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 291.
-(/Users/gahenvihaliu/Library/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
-File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 292.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
@@ -677,18 +671,18 @@ L3 programming layer <2024-03-14>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 15517 strings out of 476064
- 249100 string characters out of 5791388
- 1956493 words of memory out of 5000000
- 37361 multiletter control sequences out of 15000+600000
- 589809 words of font info for 62 fonts, out of 8000000 for 9000
+ 14984 strings out of 476064
+ 240528 string characters out of 5791388
+ 1957493 words of memory out of 5000000
+ 36841 multiletter control sequences out of 15000+600000
+ 589172 words of font info for 60 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 77i,10n,81p,680b,519s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</Users/gahenvihaliu/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></Users/gahenvihaliu/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></Users/gahenvihaliu/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></Users/gahenvihaliu/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtk10.pfb></Users/gahenvihaliu/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb>
-Output written on met1.pdf (4 pages, 522528 bytes).
+ 77i,10n,81p,592b,524s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</Users/gahenvihaliu/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></Users/gahenvihaliu/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></Users/gahenvihaliu/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb>
+Output written on met1.pdf (4 pages, 466845 bytes).
 PDF statistics:
- 93 PDF objects out of 1000 (max. 8388607)
- 73 compressed objects within 1 object stream
+ 83 PDF objects out of 1000 (max. 8388607)
+ 67 compressed objects within 1 object stream
  19 named destinations out of 1000 (max. 500000)
  46 words of extra memory for PDF output out of 10000 (max. 10000000)
 
