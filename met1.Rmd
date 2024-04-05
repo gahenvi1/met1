@@ -174,7 +174,6 @@ kable(dados_tabela,"latex", caption = "qtd de alunos", linesep = "\\addlinespace
   row_spec(0, bold = TRUE) %>%
   kable_styling(latex_options = c("scale_down"))
 
-
 ```
 
 
