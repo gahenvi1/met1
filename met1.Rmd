@@ -134,13 +134,13 @@ library(viridis)
 library(gridExtra)
 
 banco <- read.csv("dados_juntos.csv")
-brasil <- read_country(year = 2020)
+brasil <- read_country(year = 2020, showProgress= F)
 
 #mapa
 names(brasil)[which(names(brasil) == "abbrev_state")] <- "UF"
-dados_mapa <- banco %>% 
-  group_by(UF) %>% 
-  count() 
+dados_mapa <- banco %>%
+  group_by(UF) %>%
+  count()
 
 dados_mapa <- brasil %>%
   left_join(dados_mapa)
@@ -148,10 +148,11 @@ dados_mapa <- brasil %>%
 
 options(scipen = 999)
 
-ggplot() + 
+ggplot() +
   geom_sf(data=dados_mapa,  aes(fill=n),color = NA)+
   scale_fill_viridis(breaks = seq(0, 500, by = 50), option = "D", direction = -1, name = "Número de estudantes") +
   theme_minimal()
+
 
 
 #tabela
@@ -160,15 +161,15 @@ dados_tabela <- banco %>%
   summarize(n = n(), fi = n()/nrow(banco)) %>%
   arrange(desc(n))
 
-dados_tabela$UF <- factor(dados_tabela$UF) 
-levels(dados_tabela$UF)<- c("Acre", "Alagoas", "Amazônas", "Amapá", "Bahia", "Ceará", "Distrito Federal", "Espírito Santo", 
-             "Goiás", "Maranhão", "Minas Gerais", "Mato Grosso Do Sul", "Mato Grosso", "Pará", "Paraíba", "Pernambuco", 
-             "Piauí", "Paraná", "Rio De Janeiro", "Rio Grande Do Norte", "Rondônia", "Roraima", "Rio Grande Do Sul", 
+dados_tabela$UF <- factor(dados_tabela$UF)
+levels(dados_tabela$UF)<- c("Acre", "Alagoas", "Amazônas", "Amapá", "Bahia", "Ceará", "Distrito Federal", "Espírito Santo",
+             "Goiás", "Maranhão", "Minas Gerais", "Mato Grosso Do Sul", "Mato Grosso", "Pará", "Paraíba", "Pernambuco",
+             "Piauí", "Paraná", "Rio De Janeiro", "Rio Grande Do Norte", "Rondônia", "Roraima", "Rio Grande Do Sul",
              "Santa Catarina", "Sergipe", "São Paulo", "Tocantins")
-  
+
 
 colnames(dados_tabela) <- c("Unidade Federativa", "Frequência absoluta", "Frequência relativa")
-    
+
 kable(dados_tabela,"latex", caption = "qtd de alunos", linesep = "\\addlinespace") %>%
   kable_styling(latex_options = c("hold_position"), full_width = FALSE) %>%
   column_spec(1, bold = TRUE) %>%
@@ -183,21 +184,21 @@ kable(dados_tabela,"latex", caption = "qtd de alunos", linesep = "\\addlinespace
  ## Proeficiência do aluno em Língua Portuguesa
  
 ```{r}
-
-qtd_classes <- round(1 + 3.3 * log(length(banco)))
-
-
-dist_freq <- table(cut(banco$NOTA_LP, breaks = qtd_classes))
-labels <- as.vector(names(dist_freq))
-
-rownames(dist_freq) <- map_chr(labels, ~gsub("\\((\\d+),(\\d+)\\]", "\\1 |------ \\2", .x))
-
-
-kable(dist_freq,"latex", caption = "nota dos alunos") %>%
-  kable_styling(latex_options = c("hold_position"), full_width = FALSE) %>%
-  column_spec(1) %>%
-  row_spec(0, bold = TRUE) %>%
-  kable_styling(latex_options = c("scale_down"))
+# 
+# qtd_classes <- round(1 + 3.3 * log(length(banco)))
+# 
+# 
+# dist_freq <- table(cut(banco$NOTA_LP, breaks = qtd_classes))
+# labels <- as.vector(names(dist_freq))
+# 
+# rownames(dist_freq) <- map_chr(labels, ~gsub("\\((\\d+),(\\d+)\\]", "\\1 |------ \\2", .x))
+# 
+# 
+# kable(dist_freq,"latex", caption = "nota dos alunos") %>%
+#   kable_styling(latex_options = c("hold_position"), full_width = FALSE) %>%
+#   column_spec(1) %>%
+#   row_spec(0, bold = TRUE) %>%
+#   kable_styling(latex_options = c("scale_down"))
 ```
  
 
