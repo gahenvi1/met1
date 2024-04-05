@@ -1,0 +1,280 @@
+---
+title: ""
+output:
+  pdf_document: default
+  html_document: default
+header-includes:
+   - \usepackage{caption, graphicx, subfig, epstopdf, enumitem, floatrow, float}
+   - \captionsetup[table]{labelfont={bf}, labelformat=default, labelsep = colon, name = {Tabela}}
+   - \captionsetup[figure]{labelfont={bf}, labelformat=default, labelsep = colon, name = {Gráfico}}
+---
+
+## 1) Coleta de dados
+
+A Prova Brasil é uma avaliação diagnóstica realizada pelo Instituto Nacional de Estudos e Pesquisas Educacionais Anísio Teixeira (Inep/MEC) com o intuito de avaliar os alunos de ensino básico do quinto ano e do nono ano do Ensino Fundamental. Assim, tem o objetivo de aferir a qualidade do ensino oferecido pelo sistema educacional brasileiro a partir de testes padronizados e questionários socioeconômicos. 
+
+A prova é realizada em escolas públicas e particulares. Pode-se declarar que a população alvo são os próprios alunos do quinto e nono anos. Entretanto, não temos o mesmo grupo como população acessível, visto que apenas escolas com mais de 20 alunos matriculados nesses anos são avaliadas, perdendo assim uma parte da população alvo. 
+
+As principais características levantadas incluem nome, idade, nota das provas (Portugues e Matemática), escolaridade do pai e da mãe, sexo, entre outras variáveis. Esses dados são coletados através da prova e de questionários feitos pelos alunos.
+
+## 2) Variáveis
+
+Segue uma tabela com todas as variáveis presentes nas amostras recebidas pelos alunos de matrícula 232014825, 232014905 e 232014880.
+
+```{r, echo=FALSE, error=FALSE, message=FALSE, warning=FALSE}
+library(kableExtra)
+library(knitLatex)
+library(knitr)
+library(dplyr)
+library(geobr)
+library(ggplot2)
+library(viridis)
+library(gridExtra)
+library(readr)
+```
+
+
+```{r, echo=FALSE, error=FALSE, warning=FALSE, message=FALSE, fig.align='center', fig.pos='H'}
+library(kableExtra)
+
+val_metodologia <- data.frame(
+  `Variável` = c(
+    "Ano",
+    "Região",
+    "Unidade Fedarativa",
+    "Município",
+    "Área",
+    "Dependência administrativa",
+    "Localização",
+    "Nota em LP",
+    "Nota em MAT",
+    "Sexo",
+    "Cor",
+    "Mês de Nasc.",
+    "Ano de Nasc.",
+    "Computador",
+    "Esc. Mãe",
+    "Esc. Pai",
+    "Tempo de tela",
+    "Afazeres dom.",
+    "Trabalho",
+    "Perspectivas"
+  ),
+  `Tipo de variável` = c(
+    "Quantitativa discreta",
+    "Qualitativa nominal",
+    "Qualitativa nominal",
+    "Qualitativa nominal",
+    "Qualitativa nominal",
+    "Qualitativa nominal",
+    "Qualitativa nominal",
+    "Quantitativa contínua",
+    "Quantitativa contínua",
+    "Qualitativa nominal",
+    "Qualitativa nominal",
+    "Qualitativa nominal",
+    "Quantitativa discreta",
+    "Qualitativa ordinal",
+    "Qualitativa ordinal",
+    "Qualitativa ordinal",
+    "Qualitativa ordinal",
+    "Qualitativa ordinal",
+    "Qualitativa nominal",
+    "Qualitativa nominal"
+  ),
+  Escala = c(
+    "Nominal",
+    "Nominal",
+    "Nominal",
+    "Nominal",
+    "Nominal",
+    "Nominal",
+    "Nominal",
+    "Intervalar",
+    "Intervalar",
+    "Nominal",
+    "Nominal",
+    "Nominal",
+    "Nominal",
+    "Razão",
+    "Ordinal",
+    "Ordinal",
+    "Ordinal",
+    "Ordinal",
+    "Nominal",
+    "Nominal"
+  ),
+  `Descrição da variável` = c(
+    "Ano de realização da SAEB",
+    "Região onde é localizada a escola",
+    "UF da localização da escola",
+    "Município onde é localizada a escola",
+    "Área de localização do estudante",
+    "Âmbito de subordinação da escola",
+    "Localização da escola",
+    "Nota na prova de língua portuguesa",
+    "Nota na prova de matemática",
+    "Sexo do estudante",
+    "Raça/etnia do estudante",
+    "Mês de nascimento",
+    "Ano de nascimento",
+    "Se o aluno tem computador em casa",
+    "Escolaridade da mãe",
+    "Escolaridade do pai",
+    "Quanto tempo o estudante gasta em telas eletrônicas",
+    "Tempo gasto fazendo afazeres domésticos",
+    "Se o aluno trabalha ou não",
+    "Perspectivas do futuro"
+  )
+)
+
+names(val_metodologia) <- c("Variável", "Tipo de variável", "Escala", "Descrição da variável")
+
+kable(val_metodologia,format = "latex", caption = "Explicação das Variáveis", linesep = "\\addlinespace") %>%
+  kable_styling(latex_options = c("hold_position"), full_width = FALSE) %>%
+  column_spec(1, bold = TRUE) %>%
+  row_spec(0, bold = TRUE) %>%
+  kable_styling(latex_options = c("scale_down"))
+
+```
+
+## 3) Variáveis categóricas
+
+As variáveis escolhidas para análise foram UF, sexo, raça, área e trabalho. Todas são variáveis qualitativas nominais.
+
+
+### UF
+
+A variável UF se refere à unidade federativa da localização da escola. Na amostra, existem estudantes de escolas de todas as 27 UFs do país. 
+
+
+```{r fig-sub, echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, fig.cap='Mapa', out.width='.99\\linewidth' ,fig.height=3}
+library(dplyr)
+library(geobr)
+library(ggplot2)
+library(viridis)
+library(gridExtra)
+library(kableExtra)
+
+banco <- read_csv("dados_juntos.csv")
+brasil <- read_country(year = 2020, showProgress= F)
+
+#mapa
+names(brasil)[which(names(brasil) == "abbrev_state")] <- "UF"
+dados_mapa <- banco %>%
+  group_by(UF) %>%
+  count()
+
+dados_mapa <- brasil %>%
+  left_join(dados_mapa)
+
+
+options(scipen = 999)
+
+ggplot() +
+  geom_sf(data=dados_mapa,  aes(fill=n),color = NA)+
+  scale_fill_viridis(breaks = seq(0, 500, by = 50), option = "D", direction = -1, name = "Número de estudantes") +
+  theme_minimal()
+
+
+
+#tabela
+dados_tabela <- banco %>%
+  group_by(UF) %>%
+  summarize(n = n(), fi = round(n()/nrow(banco), 3)) %>%
+  arrange(desc(n))
+
+dados_tabela$UF <- factor(dados_tabela$UF)
+levels(dados_tabela$UF)<- c("Acre", "Alagoas", "Amazônas", "Amapá", "Bahia", "Ceará", "Distrito Federal", "Espírito Santo",
+             "Goiás", "Maranhão", "Minas Gerais", "Mato Grosso Do Sul", "Mato Grosso", "Pará", "Paraíba", "Pernambuco",
+             "Piauí", "Paraná", "Rio De Janeiro", "Rio Grande Do Norte", "Rondônia", "Roraima", "Rio Grande Do Sul",
+             "Santa Catarina", "Sergipe", "São Paulo", "Tocantins")
+
+
+colnames(dados_tabela) <- c("Unidade Federativa", "Frequência absoluta", "Frequência relativa")
+
+```
+
+```{r, echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, fig.align='center', results='asis'}
+
+kable(dados_tabela,"latex", caption = "Quantidade de alunos por unidade federativa", linesep = "\\addlinespace") %>%
+  kable_styling(latex_options = c("hold_position"), full_width = FALSE) %>%
+  column_spec(1, bold = TRUE) %>%
+  row_spec(0, bold = TRUE) %>%
+  kable_styling(latex_options = c("scale_down"))
+
+```
+\newpage
+
+A partir das informações mostradas pelo mapa e pela tabela, observa-se que as unidades federativas com maior número de estudantes que realizaram a prova são São Paulo, Minas Gerais e Bahia, concentrando 35,53% dos estudantes. Já os estados com menos estudantes foram Roraima e Amapá, com 3 e 4 estudantes, respectivamente.
+
+### Cor
+
+A variável cor representa a etnia de cada estudante. É qualitativa nominal e está dividida em seis categorias: branca, parda, preta, indígena, amarela e não declarada. Segue uma tabela e um gráfico sua distribuição:
+
+```{r echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, fig.pos='H'}
+library(kableExtra)
+
+cor <- banco %>%
+  filter(RACA_COR != 'NA') %>%
+  group_by(RACA_COR) %>%
+  summarise(n = n()) %>%
+  mutate(fi = round(n/sum(n), 2))%>%
+  arrange(desc(n))
+
+colnames(cor) <- c("Cor", "Frequência absoluta", "Frequência relativa")
+
+kable(cor, "latex", caption = "Quantidade de alunos pela cor", linesep = "\\addlinespace", na.remove = TRUE) %>%
+  kable_styling(latex_options = c("hold_position"), full_width = FALSE) %>%
+  column_spec(1, bold = TRUE) %>%
+  row_spec(0, bold = TRUE) %>%
+  kable_styling(latex_options = c("scale_down"))
+```
+
+```{r echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, fig.pos='H'}
+library(scales)
+library(tidyverse)
+
+theme_ju <- function(...) {
+  theme <- ggplot2::theme_bw() +
+    ggplot2::theme(
+      axis.title.y = ggplot2::element_text(colour = "black", size = 12),
+      axis.title.x = ggplot2::element_text(colour = "black", size = 12),
+      axis.text = ggplot2::element_text(colour = "black", size = 9.5),
+      panel.border = ggplot2::element_blank(),
+      axis.line = ggplot2::element_line(colour = "black"),
+      legend.position = "top",
+      ...
+    )
+  
+  return(
+    list(
+      theme,
+      scale_fill_manual(values = viridis),
+      scale_colour_manual(values = viridis)
+    )
+  )
+}
+
+viridis <- c("#fde725", "#7ad151", "#22a884", "#2a788e", "#414487", "#440154")
+
+label = str_c(cor$`Frequência absoluta`, " (", cor$`Frequência relativa`,"%)") %>% str_squish() %>% str_replace("\\.", ",")
+
+
+ggplot(cor) +
+  aes(x = fct_reorder(Cor, `Frequência absoluta` , .desc=T), y = `Frequência absoluta`, label = label) +
+  geom_bar(stat = "identity", fill = "#440154", width = 0.7) +
+  geom_text(
+    position = position_dodge(width = .9),
+    vjust = -0.5, #hjust = .5,
+    size = 3
+  ) + 
+  labs(x = "Cor", y = "Frequência") +
+  theme_minimal()
+
+```
+
+Com base nos dados apresentados, é possível notar que a maioria dos estudantes são pardos, representando 48% do total de estudantes. As etnias com menor número de estudantes foram indígenas e amarelos, representando, juntas, apenas 6% dos estudantes.
+
+
+### Área
