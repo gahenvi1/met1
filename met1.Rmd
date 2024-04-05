@@ -150,7 +150,7 @@ options(scipen = 999)
 
 ggplot() + 
   geom_sf(data=dados_mapa,  aes(fill=n),color = NA)+
-  scale_fill_viridis(option = "D", direction = -1, name = "Número de estudantes") +
+  scale_fill_viridis(breaks = seq(0, 500, by = 50), option = "D", direction = -1, name = "Número de estudantes") +
   theme_minimal()
 
 
