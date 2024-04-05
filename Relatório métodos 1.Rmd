@@ -219,7 +219,7 @@ cor <- banco %>%
   filter(RACA_COR != 'NA') %>%
   group_by(RACA_COR) %>%
   summarise(n = n()) %>%
-  mutate(fi = round(n/sum(n), 2))%>%
+  mutate(fi = round(n/sum(n), 2) * 100)%>%
   arrange(desc(n))
 
 colnames(cor) <- c("Cor", "Frequência absoluta", "Frequência relativa")
