@@ -140,7 +140,7 @@ kable(val_metodologia,format = "latex", caption = "Explicação das Variáveis",
 
 ## 3) Variáveis categóricas
 
-As variáveis escolhidas para análise foram UF, sexo, raça, área e trabalho. Todas são variáveis qualitativas nominais.
+As variáveis escolhidas para análise foram UF, sexo, cor, área e trabalho. Todas são variáveis qualitativas nominais.
 
 
 ### UF
