@@ -1,0 +1,125 @@
+---
+title: "Met1"
+author: "Maria Luiza Moura"
+date: "2024-04-06"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(dplyr)
+
+Filtragem <- dados_juntos %>%
+  select(AREA, SEXO, TRABALHO) %>%
+  filter(!is.na(AREA) & !is.na(SEXO) & !is.na(TRABALHO))
+head(Filtragem)
+
+```
+```{r}
+library(dplyr)
+
+Freq_absoluta <- dados_juntos %>%
+  group_by(AREA) %>%
+  summarize(Freq_absoluta = n())
+
+Freq_relativa <- Freq_absoluta %>%
+  mutate(Freq_relativa = Freq_absoluta / sum(Freq_absoluta))
+
+names(Freq_absoluta)[1] <- "Área"
+names(Freq_absoluta)[2] <- "Frequência Absoluta"
+
+tabela_final_AREA <- cbind(Freq_absoluta, Freq_relativa$Freq_relativa)
+colnames(tabela_final_AREA)[3] <- "Frequência Relativa"
+
+print(tabela_final_AREA)
+
+```
+```{r}
+library(ggplot2)
+
+ggplot(tabela_final_AREA, aes(x = "", y = `Frequência Relativa`, fill = `Área`, label = paste0(round(`Frequência Relativa` * 100, 1), "%"))) +
+  geom_bar(stat = "identity", color = "white") +
+  coord_polar("y", start = 0) +
+  scale_fill_manual(values = c("Capital" = "#add8e6", "Interior" = "#44556f")) +
+  theme_void() +
+  theme(legend.position = "bottom") +
+  labs(fill = "Área") +
+  ggtitle("Distribuição das Áreas") +
+  geom_text(position = position_stack(vjust = 0.5))
+
+
+```
+```{r}
+library(dplyr)
+
+Freq_absoluta_1 <- dados_juntos %>%
+  group_by(SEXO) %>%
+  summarize(Freq_absoluta_1 = n()) %>%
+   filter(!is.na(SEXO))
+
+
+Freq_relativa_1 <- Freq_absoluta_1 %>%
+  mutate(Freq_relativa_1 = Freq_absoluta_1 / sum(Freq_absoluta_1))
+
+names(Freq_absoluta_1)[1] <- "Sexo"
+names(Freq_absoluta_1)[2] <- "Frequência Absoluta"
+
+tabela_final_SEXO <- cbind(Freq_absoluta_1, Freq_relativa_1$Freq_relativa_1)
+colnames(tabela_final_SEXO)[3] <- "Frequência Relativa"
+
+print(tabela_final_SEXO)
+
+```
+
+```{r}
+library(ggplot2)
+
+dados_exemplo <- data.frame(
+  Sexo = c("Feminino", "Masculino"),
+  Valor = c(0.5210, 0.4789) * 100
+)
+
+cores <- c("Feminino" = "#1f77b4", "Masculino" = "#aec7e8", "NA" = "#7f7f7f")
+
+ggplot(dados_exemplo, aes(x = Sexo, y = Valor, fill = Sexo)) +
+  geom_bar(stat = "identity",  width = 0.2) +
+  scale_fill_manual(values = cores) +
+  theme_minimal() +
+  labs(title = "Gráfico de Barras por Sexo", x = "Sexo", y = "Valor")
+
+```
+
+```{r}
+Freq_absoluta_2 <- dados_juntos %>%
+  group_by(TRABALHO) %>%
+  summarize(Freq_absoluta_2 = n()) %>%
+  filter(!is.na(TRABALHO) & TRABALHO != "Março")
+
+Freq_relativa_2 <- Freq_absoluta_2 %>%
+  mutate(Freq_relativa_2 = Freq_absoluta_2 / sum(Freq_absoluta_2))
+
+names(Freq_absoluta_2)[1] <- "Trabalho"
+names(Freq_absoluta_2)[2] <- "Frequência Absoluta"
+
+tabela_final_TRABALHO <- cbind(Freq_absoluta_2, Freq_relativa_2$Freq_relativa_2)
+colnames(tabela_final_TRABALHO)[3] <- "Frequência Relativa"
+
+print(tabela_final_TRABALHO)
+
+
+```
+
+```{r}
+library(ggplot2)
+
+ggplot(tabela_final_TRABALHO, aes(x = `Frequência Relativa` * 100, y = Trabalho, fill = Trabalho)) +
+  geom_col(width = 0.2) +
+  theme_minimal() +
+  labs(title = "Gráfico de Barras Invertido por Trabalho", x = "Frequência Relativa", y = "Trabalho")
+
+```
+
+
