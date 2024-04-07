@@ -1,5 +1,5 @@
 ---
-title: ""
+title: "Título"
 output:
   pdf_document: default
   html_document: default
@@ -277,4 +277,327 @@ ggplot(cor) +
 Com base nos dados apresentados, é possível notar que a maioria dos estudantes são pardos, representando 48% do total de estudantes. As etnias com menor número de estudantes foram indígenas e amarelos, representando, juntas, apenas 6% dos estudantes.
 
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
 ### Área
+
+A variável área representa a região de localização da escola do estudante, na capital ou no interior. Segue uma tabela e um gráfico com sua distribuição: 
+
+```{r echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, fig.pos='H'}
+library(dplyr)
+
+dados_juntos <- banco
+
+Filtragem <- dados_juntos %>%
+  select(AREA, SEXO, TRABALHO) %>%
+  filter(!is.na(AREA) & !is.na(SEXO) & !is.na(TRABALHO))
+
+Freq_absoluta <- dados_juntos %>%
+  group_by(AREA) %>%
+  summarize(Freq_absoluta = n())
+
+Freq_relativa <- Freq_absoluta %>%
+  mutate(Freq_relativa = Freq_absoluta / sum(Freq_absoluta))
+
+names(Freq_absoluta)[1] <- "Área"
+names(Freq_absoluta)[2] <- "Frequência absoluta"
+
+tabela_final_AREA <- cbind(Freq_absoluta, Freq_relativa$Freq_relativa)
+colnames(tabela_final_AREA)[3] <- "Frequência relativa"
+
+kable(tabela_final_AREA, "latex", caption = "Quantidade de alunos por área", linesep = "\\addlinespace", na.remove = TRUE) %>%
+  kable_styling(latex_options = c("hold_position"), full_width = FALSE) %>%
+  column_spec(1, bold = TRUE) %>%
+  row_spec(0, bold = TRUE) %>%
+  kable_styling(latex_options = c("scale_down"))
+```
+
+
+```{r echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, fig.pos='H'}
+library(ggplot2)
+
+ggplot(tabela_final_AREA, aes(x = "", y = `Frequência relativa`, fill = `Área`, label = paste0(round(`Frequência relativa` * 100, 1), "%"))) +
+  geom_bar(stat = "identity", color = "white") +
+  coord_polar("y", start = 0) +
+  scale_fill_manual(values = c("Capital" = "#440154", "Interior" = "#414487")) +
+  theme_void() +
+  theme(legend.position = "bottom") +
+  labs(fill = "Área") +
+  ggtitle("Porcenyagem de estudantes pela área") +
+  geom_text(position = position_stack(vjust = 0.5))
+
+
+```
+
+A partir do gráfico, fica claro que há uma proporção muito maior de estudantes de escolas localizadas em cidades de interior do que em cidades de capital.
+
+### Sexo
+
+A variável sexo indica o gênero dos estudantes que realizaram a prova. A seguir, é apresentada sua distribuição:
+
+```{r echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, fig.pos='H'}
+library(dplyr)
+
+Freq_absoluta_1 <- dados_juntos %>%
+  group_by(SEXO) %>%
+  summarize(Freq_absoluta_1 = n()) %>%
+   filter(!is.na(SEXO))
+
+Freq_relativa_1 <- Freq_absoluta_1 %>%
+  mutate(Freq_relativa_1 = round(Freq_absoluta_1 / sum(Freq_absoluta_1), 2))
+
+names(Freq_absoluta_1)[1] <- "Sexo"
+names(Freq_absoluta_1)[2] <- "Frequência absoluta"
+
+tabela_final_SEXO <- cbind(Freq_absoluta_1, Freq_relativa_1$Freq_relativa_1)
+colnames(tabela_final_SEXO)[3] <- "Frequência relativa"
+
+kable(tabela_final_SEXO, "latex", caption = "Quantidade de alunos pelo sexo", linesep = "\\addlinespace", na.remove = TRUE) %>%
+  kable_styling(latex_options = c("hold_position"), full_width = FALSE) %>%
+  column_spec(1, bold = TRUE) %>%
+  row_spec(0, bold = TRUE) %>%
+  kable_styling(latex_options = c("scale_down"))
+
+```
+
+
+```{r echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, fig.pos='H'}
+
+label = str_c(tabela_final_SEXO$`Frequência absoluta`, " (", tabela_final_SEXO$`Frequência relativa`* 100,"%)") %>% str_squish() %>% str_replace("\\.", ",")
+
+ggplot(tabela_final_SEXO) +
+  aes(x = fct_reorder(Sexo, `Frequência absoluta` , .desc=T), y = `Frequência absoluta`, label = label) +
+  geom_bar(stat = "identity", fill = "#440154", width = 0.2) +
+  scale_y_continuous(limits = c(0,800)) +
+  geom_text(
+    position = position_dodge(width = .9),
+    vjust = -0.5, hjust = .5,
+    size = 3
+  ) + 
+  labs(x = "Sexo", y = "Frequência") +
+  theme_minimal()
+
+```
+
+Com base nas informações apresentadas, nota-se que o número de meninas e de meninos que realizaram a prova é semelhante, embora a proporção de meninas seja maior, representando 52% do total de estudantes.
+
+### Trabalho
+
+A variável trabalho indica se o estudante trabalha ou não. A seguir, observa-se sua distribuição:
+
+```{r echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, fig.pos='H'}
+Freq_absoluta_2 <- dados_juntos %>%
+  group_by(TRABALHO) %>%
+  summarize(Freq_absoluta_2 = n()) %>%
+  filter(!is.na(TRABALHO) & TRABALHO != "Março")
+
+Freq_relativa_2 <- Freq_absoluta_2 %>%
+  mutate(Freq_relativa_2 = round(Freq_absoluta_2 / sum(Freq_absoluta_2), 2))
+
+names(Freq_absoluta_2)[1] <- "Trabalho"
+names(Freq_absoluta_2)[2] <- "Frequência absoluta"
+
+tabela_final_TRABALHO <- cbind(Freq_absoluta_2, Freq_relativa_2$Freq_relativa_2)
+colnames(tabela_final_TRABALHO)[3] <- "Frequência relativa"
+
+kable(tabela_final_TRABALHO, "latex", caption = "Quantidade de alunos pelo trabalho", linesep = "\\addlinespace", na.remove = TRUE) %>%
+  kable_styling(latex_options = c("hold_position"), full_width = FALSE) %>%
+  column_spec(1, bold = TRUE) %>%
+  row_spec(0, bold = TRUE) %>%
+  kable_styling(latex_options = c("scale_down"))
+
+```
+
+```{r echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, fig.pos='H'}
+library(ggplot2)
+
+label = str_c(tabela_final_TRABALHO$`Frequência absoluta`, " (", tabela_final_TRABALHO$`Frequência relativa`* 100,"%)") %>% str_squish() %>% str_replace("\\.", ",")
+
+ggplot(tabela_final_TRABALHO) +
+  aes(x = fct_reorder(Trabalho, `Frequência absoluta` , .desc=T), y = `Frequência absoluta`, label = label) +
+  geom_bar(stat = "identity", fill = "#440154", width = 0.2) +
+  geom_text(
+    position = position_dodge(width = .9),
+    vjust = -0.5, hjust = .5,
+    size = 3
+  ) + 
+  labs(x = "Trabalho", y = "Frequência") +
+  theme_minimal()
+
+```
+
+Analisando os dados apresentados, constata-se que 193 estudantes realizam algum tipo de trabalho, o que representa 13% do total. 
+
+# 4) Variáveis quantitativas
+
+##  Proeficiência do aluno em Língua Portuguesa
+
+```{r  echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.pos='H'}
+assimetria<- function(x){
+  q1<-quantile(x, probs = 0.25)
+  q2<-quantile(x, probs = 0.5)
+  q3<- quantile(x, probs = 0.75)
+  return (q1+ q3 - (2*q2)) / (q3-q1)
+}
+
+#tabela 1
+qtd_classes <- round(1 + 3.3 * log(length(banco)))
+
+
+dist_freq <- table(cut(banco$NOTA_LP, breaks = qtd_classes))
+labels <- as.vector(names(dist_freq))
+
+rownames(dist_freq) <- map_chr(labels, ~gsub("\\((\\d+),(\\d+)\\]", "\\1 [-----) \\2", .x))
+dist_freq<- as.data.frame(as.matrix(dist_freq)) |>
+  mutate(`Intervalo de Classe` = rownames(dist_freq), `Frequência` = V1) |>
+  select(`Intervalo de Classe`, `Frequência`)  |>
+  rbind2(c("Total", nrow(banco)))
+
+rownames(dist_freq) <- NULL
+
+
+
+
+tabela1 <- kable(dist_freq,caption = "Distribuição da nota dos alunos", align = "c", position = "below") |>
+  kable_styling(latex_options = c("hold_position"), full_width = FALSE) |>
+  column_spec(1, bold = T) |>
+  row_spec(0, bold = TRUE) |>
+  kable_styling(latex_options = c("scale_down"))
+
+
+#tabela 2 (medidas)
+dados_tabela2 <- banco |>
+  summarise(
+    `Média` = mean(banco$NOTA_LP),
+    Mediana = quantile(banco$NOTA_LP, 0.5),
+    `Erro padrão` = sd(banco$NOTA_LP),
+    `Coef. de Variação` = sd(banco$NOTA_LP)/mean(banco$NOTA_LP),
+    `Coef. de Assimetria de Pearson`  = assimetria(banco$NOTA_LP),
+    `Curtose` = e1071::kurtosis(banco$NOTA_LP)
+  )
+
+tabela2 <- kable(dados_tabela2, caption = "Medidas resumo", align = "c", position = "below", digits = 3) |>
+  kable_styling(latex_options = c("hold_position"), full_width = FALSE) |>
+  column_spec(1) |>
+  row_spec(0, bold = TRUE) |>
+  kable_styling(latex_options = c("scale_down"))
+
+
+# knitr::kables(
+#   list(tabela1, tabela2), format = "latex"
+# )
+
+tabela1
+tabela2
+```
+
+
+```{r fig-sub2, echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, fig.cap='Histograma das notas de Língua Portuguesa', out.width='.99\\linewidth', fig.height=3, fig.align='center', fig.pos='H'}
+#histograma
+ggplot() +
+  geom_histogram(aes(x = banco$NOTA_LP, y = after_stat(density)), fill = "#2a788e", binwidth = 5) +
+  labs(x = "Proficiência dos alunos em Língua Portuguesa", y = "Densidade") +
+  theme_minimal()+
+  xlim(130, 450)
+
+
+#geom_line(aes(x = banco$NOTA_LP, y = dnorm(banco$NOTA_LP, mean = mean(banco$NOTA_LP),sd = sd(banco$NOTA_LP))), color = "purple")
+
+
+```
+
+```{r fig-sub3, echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, fig.cap='Box-plot das notas de LP', out.width='.99\\linewidth', fig.height=3, fig.align='center', fig.pos='H'}
+#boxplot
+
+ggplot(banco) +
+  aes(x=factor(""), y=NOTA_LP) +
+  geom_boxplot(fill=c("#2a788e"), width = 0.5) +
+  guides(fill=FALSE) +
+  stat_summary(fun="mean", geom="point", shape=23, size=3, fill="white")+
+  labs(x="", y="Notas")+
+  theme_ju()
+
+```
+
+\newpage
+## Proeficiência do aluno em Matemática
+
+```{r  echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.pos='H'}
+#tabela 1
+
+dist_freq2 <- table(cut(banco$NOTA_MT, breaks = qtd_classes))
+labels2 <- as.vector(names(dist_freq2))
+
+rownames(dist_freq2) <- map_chr(labels2, ~gsub("\\((\\d+),(\\d+)\\]", "\\1 [-----) \\2", .x))
+dist_freq2<- as.data.frame(as.matrix(dist_freq2)) |>
+  mutate(`Intervalo de Classe` = rownames(dist_freq2), `Frequência` = V1) |>
+  select(`Intervalo de Classe`, `Frequência`)  |>
+  rbind2(c("Total", nrow(banco)))
+
+rownames(dist_freq2) <- NULL
+
+
+
+
+tabela3 <- kable(dist_freq2,caption = "Distribuição das notas dos alunos", align = "c", position = "below") |>
+  kable_styling(latex_options = c("hold_position"), full_width = FALSE) |>
+  column_spec(1, bold = T) |>
+  row_spec(0, bold = TRUE) |>
+  kable_styling(latex_options = c("scale_down"))
+
+
+#tabela 2 (medidas)
+dados_tabela4 <- banco |>
+  summarise(
+    `Média` = mean(banco$NOTA_MT),
+    Mediana = quantile(banco$NOTA_MT, 0.5),
+    `Erro padrão` = sd(banco$NOTA_MT),
+    `Coef. de Variação` = sd(banco$NOTA_MT)/mean(banco$NOTA_MT),
+    `Coef. de Assimetria de Pearson`  = assimetria(banco$NOTA_MT),
+    `Curtose` = e1071::kurtosis(banco$NOTA_MT)
+  )
+
+tabela4 <- kable(dados_tabela4, caption = "Medidas resumo", align = "c", position = "below", digits = 3) |>
+  kable_styling(latex_options = c("hold_position"), full_width = FALSE) |>
+  column_spec(1) |>
+  row_spec(0, bold = TRUE) |>
+  kable_styling(latex_options = c("scale_down"))
+
+
+# knitr::kables(
+#   list(tabela1, tabela2), format = "latex"
+# )
+
+tabela3
+tabela4
+```
+
+
+```{r fig-sub4, echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, fig.cap='Histograma das notas de matemática', out.width='.99\\linewidth', fig.height=3, fig.align='center', fig.pos='H'}
+#histograma
+ggplot() +
+  geom_histogram(aes(x = banco$NOTA_MT, y = after_stat(density)), fill = "#2a788e", binwidth = 5) +
+  labs(x = "Proeficiência dos alunos em Matemática", y = "Densidade") +
+  theme_minimal()+
+  xlim(130, 450)
+
+
+#geom_line(aes(x = banco$NOTA_LP, y = dnorm(banco$NOTA_LP, mean = mean(banco$NOTA_LP),sd = sd(banco$NOTA_LP))), color = "purple")
+
+
+```
+
+```{r fig-sub5, echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, fig.cap='Box-plot das notas de Matemática', out.width='.99\\linewidth', fig.height=3, fig.align='center', fig.pos='H'}
+#boxplot
+ggplot(banco) +
+  aes(x=factor(""), y=NOTA_MT) +
+  geom_boxplot(fill=c("#2a788e"), width = 0.5) +
+  guides(fill=FALSE) +
+  stat_summary(fun="mean", geom="point", shape=23, size=3, fill="white")+
+  labs(x="", y="Notas")+
+  theme_ju()
+
+
+```
